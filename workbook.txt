@@ -1,0 +1,231 @@
+public class Main {
+  
+    public static void main(String[] args) {
+        System.out.println("MyWork Starts ...");
+
+		System.out.println("First non-repeating character");
+        String str = "geeksforgeeks";
+        System.out.println("First non-repeating character is  " + firstNotRepeatingCharacter(str) );
+    
+
+
+
+ /*
+		System.out.println("find the number of non-empty contiguous subarrays with length not greater than k and with a sum equal to s");
+        int[] arr = { 1, 0 };
+        int k = 2, s = 1 ;
+        System.out.println("SubarraysCountBySum : " + subarraysCountBySum(arr, k, s));
+
+
+
+        System.out.println("Calculate the sum of reverse numbers of the elements of arr..");
+        int[] arr = { 7, 234, 58100 };
+        System.out.println("Revrse Sum : " + totalSum(arr));
+        
+         
+        System.out.println("Given an integer n and an array a of length n ");
+        int[] a = { 4, 0, 1, -2, 3 };
+        int[] newa = copyArray(5, a);
+        for (int i : newa) {
+           System.out.print( i + " , ");
+        }
+     */
+    }  
+  
+ 
+ 
+ 
+   	static long subSequencesBySum(int[] arr, int k) {
+ 		int count = 0;
+        for (int start = 0; start < arr.length; start++) {
+            int sum=0, 
+            for (int end = start; end < arr.length ; end++) {
+                sum+=arr[end];
+                if (sum <= k)
+                    count++;
+            }
+        }
+        return count;
+	}
+/*  
+  
+	static char firstNotRepeatingCharacter(String s) {
+      	char[] c=s.toCharArray();
+		for(int i=0;i<s.length();i++){
+    		if(s.indexOf(c[i])==s.lastIndexOf(c[i]))
+        	return c[i];
+		}
+    	return '_';
+  	}
+ 
+
+  
+  	static long subarraysCountBySum(int[] arr, int k, long s) {
+ 		int count = 0;
+        for (int start = 0; start < arr.length; start++) {
+            int sum=0, sublen =0;
+            for (int end = start; end < arr.length && sublen < k; end++) {
+                sum+=arr[end];
+                sublen++;
+                if (sum == s)
+                    count++;
+            }
+        }
+        return count;
+	}
+  
+
+    static int[] copyArray(int n, int[] a) {
+        int[] b = new int[n];
+        for (int i = 0; i < n; i++) {
+            int pre = (i - 1 < 0) ? 0 : a[i - 1];
+            int next = (i + 1 < n) ? a[i + 1] : 0;
+            System.out.println("Previous : " + pre + " Current : " + a[i] + "   Next : " + next);
+            b[i] = pre + a[i] + next;
+        }
+
+        return b;
+    }
+  
+    // Function to find the sum of elements after reversing each element in arr[]
+    static int totalSum(int[] arr) {
+        int sum = 0; // Stores the final sum
+
+        for (int num: arr) {
+            int count = 0; // Stores count of ending 0s
+            int rev = 0;
+            boolean f = false; // Flag to avoid count of 0s that doesn't ends with 0s
+
+            while (num > 0) {
+                // Count of ending 0s
+                while (num > 0 && !f && num % 10 == 0) {
+                    count++;
+                    num = num / 10;
+                }
+
+                f = true; // Update flag with true
+                // Reversing the num
+                if (num > 0) {
+                    rev = rev * 10 + num % 10;
+                    num = num / 10;
+                }
+            }
+
+            // Add all ending 0s to end of rev
+            if (count > 0)
+                rev = rev * (int) Math.pow(10, count);
+
+            sum = sum + rev; // Update sum
+        }
+        return sum;
+    }
+    */
+}
+
+
+---------------
+
+
+
+
+public class Main{
+public static void main(String[] args) {
+	System.out.println(" Start ..");
+		
+	String[] crypt = {"SEND", "MORE", "MONEY"};
+	char[][] solution = { {'O', '0'}, {'M', '1'}, {'Y', '2'}, {'E', '5'}, {'N', '6'}, {'D', '7'}, {'R', '8'}, {'S', '9'}};
+
+        System.out.println(" isCryptSolution : " + isCryptSolution(crypt, solution));
+	System.out.println(" End ..");
+	
+}
+
+static boolean isCryptSolution(String[] crypt, char[][] solution) {
+
+	for (char[] arr : solution){
+            crypt[0] = crypt[0].replace(arr[0],arr[1]);
+            crypt[1] = crypt[1].replace(arr[0],arr[1]);
+            crypt[2] = crypt[2].replace(arr[0],arr[1]);
+        
+        }
+        for (String cry:crypt){
+            if (cry.startsWith("0") && !cry.equals("0") )
+                return false;
+        }
+
+        return Long.parseLong(crypt[0]) +  Long.parseLong(crypt[1]) == Long.parseLong(crypt[2]);
+      
+}
+
+}
+
+
+-------------------------
+public class Main {  
+    public static void getPartition(int[] arr, int lowValue, int highValue) {
+        int n = arr.length; int startingValue = 0, endingValue = n-1;
+        for(int i = 0; i <= endingValue;) {
+            if(arr[i] < lowValue)  {
+                int temp = arr[startingValue];
+                arr[startingValue] = arr[i];
+                arr[i] = temp;
+                startingValue++;
+                i++;
+            } else if(arr[i] > highValue) {
+                int temp = arr[endingValue];
+                arr[endingValue] = arr[i];
+                arr[i] = temp;
+                endingValue --;
+            } else {
+                i++;
+            }
+            System.out.println(" After loop " + i + " " + java.util.Arrays.toString(arr));
+        }
+    }
+    public static void main (String[] args) {
+        int arr[] = {2,5,87,56,12,4,9,23,76,1,45};
+        getPartition(arr, 15, 30 );
+        System.out.print(java.util.Arrays.toString(arr));
+    }
+}
+
+--------------------------
+   public static void getTriplet(int arr[]) {
+        int n = arr.length;  int i;
+        int maximum = n - 1; int minimum = 0; 
+        int[] small = new int[n]; small[0] = -1;
+        int[] great = new int[n]; great[n - 1] = -1;
+
+        for (i = 1; i < n; i++) {
+            if (arr[i] <= arr[minimum]) {
+                minimum = i;
+                small[i] = -1;
+            } else
+                small[i] = minimum;
+                
+        System.out.println(" small " +  i + "  " + minimum + "  " + java.util.Arrays.toString(small));        
+        }
+        
+        for (i = n - 2; i >= 0; i--) {
+            if (arr[i] >= arr[maximum]) {
+                maximum = i;
+                great[i] = -1;
+            } else
+                great[i] = maximum;
+        }
+        System.out.println(" small " +   java.util.Arrays.toString(small));
+        System.out.println(" great "  + java.util.Arrays.toString(great));
+        
+        for (i = 0; i < n; i++) {
+            if (small[i] != -1 && great[i] != -1) {
+                System.out.println(arr[small[i]] + " " + arr[i] + " " + arr[great[i]]);
+                return;
+            }
+        }
+        System.out.println("3 numbers not found");
+        return;
+    }
+    public static void main(String[] args) {
+        int arr[] = { 11,34,3,5,1,7,4 };
+        getTriplet(arr);
+    }

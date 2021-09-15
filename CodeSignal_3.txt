@@ -1,0 +1,334 @@
+Test 4 ::
+
+Let's say the string word is an occurrence of the string sequence if sequence contains word as a substring.
+
+Let's say the string word is a k-occurrence of the string sequence if sequence contains word repeated k times as a substring. Note that if word is an occurrence of sequence, it is a 1-occurrence as well.
+
+For example, if word = "ab" and sequence = "dabcacab", then word is a 1-occurrence of sequence but not a 2-occurrence, because sequence doesn't contain "abab" as a substring. On the other hand, the string "ca" is a 2-occurrence of sequence, since it contains "caca" as a substring.
+
+Given a string sequence and an array of strings words, your task is to find the maximal value of k for each element, such that words[i] is a k-occurrence of sequence. Return the k-values as an array of integers of length words.length.
+
+Example
+
+For sequence = "ababcbabc" and words = ["ab", "babc", "bca"], the output should be maxKOccurrences(sequence, words) = [2, 2, 0].
+
+words[0] = "ab" is a 2-occurrence of sequence, because sequence[0..4] = "abab";
+words[0] = "ab" is not a 3-occurence of sequence, because there is no substring "ababab" in sequence;
+words[1] = "babc" is a 2-occurrence of sequence, because sequence[1..8] = "babcbabc";
+words[1] = "babc" is not a 3-occurence of sequence, because there is no substring "babcbabcbabc" in sequence;
+words[2] = "bca" is a 0-occurrence of sequence, because there is no substring "bca" in sequence.
+
+int[] maxKOccurrences(String sequence, String[] words) {
+
+ int[] in = new int[words.length];
+        for (int i = 0; i < words.length; i++) {
+            String st = words[i];
+            int count = 0;
+            int index = 0;
+            while (true) {
+                int found = sequence.indexOf(st, index);
+                if ((count == 0 && found >= 0)) {
+                    count++;
+                    index += found + st.length();
+                } else if (found >= 0 && count > 0 && found == index) {
+                    count++;
+                    index += st.length();
+                } else {
+                    break;
+                }
+            }
+            in[i] = count;
+        }
+        return in;
+}
+
+
+********************
+Test 3:
+
+Let's say a triple (a, b, c) is a zigzag if either a < b > c or a > b < c.
+Given an array of integers numbers, your task is to check all the triples of its consecutive elements for being a zigzag. More formally, your task is to construct an array of length numbers.length - 2, where the ith element of the output array equals 1 if the triple (numbers[i], numbers[i + 1], numbers[i + 2]) is a zigzag, and 0 otherwise.
+
+Example
+For numbers = [1, 2, 1, 3, 4], the output should be isZigzag(numbers) = [1, 1, 0].
+
+(numbers[0], numbers[1], numbers[2]) = (1, 2, 1) is a zigzag, because 1 < 2 > 1;
+(numbers[1], numbers[2] , numbers[3]) = (2, 1, 3) is a zigzag, because 2 > 1 < 3;
+(numbers[2], numbers[3] , numbers[4]) = (1, 3, 4) is not a zigzag, because 1 < 3 < 4;
+For numbers = [1, 2, 3, 4], the output should be isZigzag(numbers) = [0, 0];
+
+Since all the elements of numbers are increasing, there are no zigzags.
+
+For numbers = [1000000000, 1000000000, 1000000000], the output should be isZigzag(numbers) = [0].
+
+Since all the elements of numbers are the same, there are no zigzags.
+
+
+CODE ::::
+int[] isZigzag(int[] numbers) {
+    
+    int[] values = new int[numbers.length-2];
+	
+		for(int i=0; i<numbers.length-2; i++){
+			
+				if( ( numbers[i] < numbers[i+1] & numbers[i+1] > numbers[i+2]  )  ||
+                ( numbers[i] > numbers[i+1] & numbers[i+1] < numbers[i+2]  ))
+					values[i] = 1;
+                else     
+                    values[i] = 0;
+				
+		}
+        return values;
+}
+
+
+---------------------
+
+You are given a string s. Consider the following algorithm applied to this string:
+
+Take all the prefixes of the string, and choose the longest palindrome between them.
+If this chosen prefix contains at least two characters, cut this prefix from s and go back to the first step with the updated string. Otherwise, end the algorithm with the current string s as a result.
+Your task is to implement the above algorithm and return its result when applied to string s.
+
+Note: you can click on the prefixes and palindrome words to see the definition of the terms if you're not familiar with them.
+
+Example
+
+For s = "aaacodedoc", the output should be palindromeCutting(s) = "".
+
+The initial string s = "aaacodedoc" contains only three prefixes which are also palindromes - "a", "aa", "aaa". The longest one between them is "aaa", so we cut if from s.
+Now we have string "codedoc". It contains two prefixes which are also palindromes - "c" and "codedoc". The longest one between them is "codedoc", so we cut if from the current string and obtain the empty string.
+Finally the algorithm ends on the empty string, so the answer is "".
+For s = "codesignal", the output should be palindromeCutting(s) = "codesignal".
+The initial string s = "codesignal" contains the only prefix, which is also palindrome - "c". This prefix is the longest, but doesn't contain two characters, so the algorithm ends with string "codesignal" as a result.
+
+For s = "", the output should be palindromeCutting(s) = "".
+
+CODE :::
+  static String solvePrefixPalindrome(String s) {
+	int max=0;
+	for(int i=2;i<=s.length();i++){
+	    String s1 = s.substring(0,i);
+        StringBuilder go = new StringBuilder(s1);
+        String s2= String.valueOf(go.reverse());
+	    if(s2.equals(s1)){
+            if(s2.length()>max)
+                    max= s2.length();
+        }
+    }
+    if (max>1)
+         return solvePrefixPalindrome(s.substring(max));
+    else
+        return s.substring(max);
+
+  }
+-----------------
+
+Consider a map of city streets, in the form of a grid.
+
+You'd like to know if it's possible to make your way to the exit, under the following rules:
+
+You begin from the left side of the square in the top-left corner;
+The exit is on the right side of the square in the bottom-right corner;
+You must travel along a connected path between squares.
+You're given directions, a matrix of integers representing the grid of streets, where each integer corresponds to a different type of road square:
+
+
+Your task is to return true if it's possible to reach the exit, and false otherwise.
+
+Example
+
+For directions = [[0, 2, 1], [5, 4, 0]], the output should be trafficMap(directions) = true
+
+For directions = [[0, 2, 1], [5, 4, 1]], the output should be trafficMap(directions) = false.
+
+
+-------------------
+
+Your task to check whether it is possible to construct a given array of integers from a bunch of given pieces.
+
+More formally, you are given an array of distinct non-negative integers arr and an array of integer arrays pieces. Your task is to check whether it is possible to arrange the arrays of pieces in such a way that they can be concatenated to form an array equal to arr (containing all the same elements in the same order).
+
+For arr = [1, 2, 5, 3] and pieces = [[5], [1, 2], [3]], the output should be shuffleThePieces(arr, pieces) = true.
+
+The arrays of pieces can be arranged in the order [1, 2], [5], and [3], which would be equal to arr = [1, 2, 5, 3] when concatenated.
+
+For arr = [1, 2, 5, 3, 6] and pieces = [[1, 2], [5], [6, 3]], the output should be shuffleThePieces(arr, pieces) = false.
+
+
+There are no arrangements of pieces that would result in an array equal to arr.
+
+For arr = [1, 5, 4, 3, 2, 8] and pieces = [[4, 3], [1, 5], [2]], the output should be shuffleThePieces(arr, pieces) = false.
+
+Since the sum of the lengths of the arrays of pieces isn't equal to the length of arr, there's no way they could become equal, so the answer is false.
+
+For arr = [1, 5, 4, 3, 2, 8] and pieces = [[1, 5, 5], [3, 2], [8]], the output should be shuffleThePieces(arr, pieces) = false.
+
+Since the elements of arr aren't equal to the elements of the arrays of pieces, there's no way they could become equal, so the answer is false.
+
+
+
+
+
+
+
+
+-----------------------------------------------------------------
+Test 2: 
+
+
+You are given an array of integers a and two integers l and r. You task is to calculate a boolean array b, 
+where b[i] = true if there exists an integer x, such that a[i] = (i + 1) * x and l = x = r.
+Otherwise, b[i] should be set to false.
+
+Example
+
+For a = [8, 5, 6, 16, 5], l = 1, and r = 3, the output should be boundedRatio(a, l, r) = [false, false, true, false, true].
+
+For a[0] = 8, we need to find a value of x such that 1 * x = 8, but the only value that would work is x = 8 which doesn't satisfy the boundaries 1 = x = 3, so b[0] = false.
+For a[1] = 5, we need to find a value of x such that 2 * x = 5, but there is no integer value that would satisfy this equation, so b[1] = false.
+For a[2] = 6, we can choose x = 2 because 3 * 2 = 6 and 1 = 2 = 3, so b[2] = true.
+For a[3] = 16, there is no an integer 1 = x = 3, such that 4 * x = 16, so b[3] = false.
+For a[4] = 5, we can choose x = 1 because 5 * 1 = 5 and 1 = 1 = 3, so b[4] = true.
+
+
+
+
+
+
+--------------
+
+You are given an array of integers a. A new array b is generated by rearranging the elements of a in the following way:
+
+b[0] is equal to a[0];
+b[1] is equal to the last element of a;
+b[2] is equal to a[1];
+b[3] is equal to the second-last element of a;
+b[4] is equal to a[2];
+b[5] is equal to the third-last element of a;
+and so on.
+Your task is to determine whether the new array b is sorted in strictly ascending order or not.
+
+Here is how the process of generating the new array b works:
+
+For a = [1, 3, 5, 6, 4, 2], the output should be alternatingSort(a) = true.
+
+The new array b will look like [1, 2, 3, 4, 5, 6], which is in strictly ascending order, so the answer is true.
+
+For a = [1, 4, 5, 6, 3], the output should be alternatingSort(a) = false.
+
+The new array b will look like [1, 3, 4, 6, 5], which is not in strictly ascending order, so the answer is false.
+
+
+
+passed 11/22
+boolean alternatingSort(int[] a) {
+int[] b = new int[a.length+1];
+boolean value = true;
+int revcounter = a.length-1;
+int i = 0 ; 
+int counter = 0;
+while ( i  <= revcounter ) {
+    
+    b[counter] = a[i];
+    counter++;
+    i++;
+    b[counter] = a[revcounter];
+    revcounter--;
+}
+for ( int n=0; n<a.length; n++){
+    
+    if (n < a.length-1) {
+    if ( a[n] > a[n+1]) {
+        value = false;
+    }
+}
+}
+
+
+
+return value;
+}
+
+
+-----------------------
+
+
+Given a square matrix of integers m, your task is to rearrange its numbers in the following way:
+
+First, sort its values in ascending order of how frequently the number occurs in m. In the case of a tie, sort the equally frequent numbers by their values, in ascending order.
+Second, place the sorted numbers diagonally, starting from the bottom right corner, like this:
+Example
+
+For
+
+m = [[ 1, 4, -2],
+     [-2, 3,  4],
+     [ 3, 1,  3]]
+the output should be
+
+sortMatrixByOccurrences(m) = [[3,  3,  4],
+                              [3,  4,  1],
+                              [1, -2, -2]]
+First we look at the frequency of each number:
+
+Number 1 occurs 2 times;
+Number -2 occurs 2 times;
+Number 3 occurs 3 times;
+Number 4 occurs 2 times.
+Because numbers 1, -2, and 4 occur the same number of times, we sort them by their values in ascending order. 
+Number 3 occurs the most numbers of times, so it goes after all other numbers. 
+Finally, after sorting we get the following array: [-2, -2, 1, 1, 4, 4, 3, 3, 3]
+
+After sorting, the numbers should be placed diagonally starting from the bottom right corner, as follows:
+
+[[3,  3,  4],
+ [3,  4,  1],
+ [1, -2, -2]]
+Input/Output
+
+[execution time limit] 3 seconds (java)
+
+[input] array.array.integer m
+
+A square matrix of integers.
+
+Guaranteed constraints:
+1 = m.length = 40,
+m[i].length = m.length,
+-1000 = m[i][j] = 1000.
+
+[output] array.array.integer
+
+The matrix m rearranged according to the specifications above.
+
+-----------------------
+
+You're walking down a long straight road at night, illuminated by street lights, and you're wondering how many of the lights are actually required to light up the whole street.
+
+Let's represent the street as a number line, going from 0 to n (inclusive). Each street light has a different location (represented as an integer on the number line) and light radius (an integer representing how far the light shines in either direction).
+
+Given n and lights, an array of 2-element arrays of the form [location, radius], your task is to find the minimum number of these lights required to light up the whole street. Return -1 if it's not possible to light the whole street with the given set of lights.
+
+Note: Each radius includes its own border; in other words, each light covers the inclusive interval [location - radius, location + radius].
+
+Example
+
+For n = 10 and lights = [[0, 5], [1, 3], [5, 4], [8, 3]], the output should be streetLights(n, lights) = 2.
+
+
+lights[0] and lights[3] illuminate the whole street (segment [0, 10]).
+There's no way to light the whole street with fewer than 2 lights, so the answer is 2
+
+For n = 9 and lights = [[5, 3]], the output should be streetLights(n, lights) = -1.
+
+It's not possible to light the whole street with this single light, because it lights only the segment [2, 8] and does not light the segments [0, 2) or (8, 9].
+
+For n = 8 and lights = [[2, 3], [8, 2]], the output should be streetLights(n, lights) = -1.
+
+
+The lights don't cover the space between points 5 and 6, and thus don't cover the whole segment [0, 10].
+
+For n = 10 and lights = [[0, 5], [1, 3], [5, 4]], the output should be streetLights(n, lights) = -1
+
+There are no lights to cover the rightmost segment of the street from 9 to 10.

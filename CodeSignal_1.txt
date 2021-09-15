@@ -1,0 +1,782 @@
+
+STRING Reverse 
+
+boolean checkPalindrome(String inputString) {
+    return inputString.equals(new StringBuilder(inputString).reverse().toString());
+}
+
+---------------------
+
+STRING  FIRST NON REPEATING CHAR 
+
+Given a string s consisting of small English letters, find and return the first instance of a non-repeating character in it.
+If there is no such character, return '_'.
+
+Example
+For s = "abacabad", the output should be
+firstNotRepeatingCharacter(s) = 'c'.
+There are 2 non-repeating characters in the string: 'c' and 'd'. Return c since it appears in the string first.
+
+For s = "abacabaabacaba", the output should be
+firstNotRepeatingCharacter(s) = '_'.
+
+There are no characters in this string that do not repeat.
+
+ CODE:::: 
+  static char firstNotRepeatingCharacter(String s) {
+      	char[] c=s.toCharArray();
+	for(int i=0;i<s.length();i++){
+    	    if(s.indexOf(c[i])==s.lastIndexOf(c[i]))
+        	return c[i];
+	}
+    	return '_';
+  }
+
+-----------------------
+
+
+****ARRAY
+
+Given an integer n and an array a of length n, your task is to apply the following mutation to a:
+Array a mutates into a new array b of length n.
+For each i from 0 to n - 1, b[i] = a[i - 1] + a[i] + a[i + 1].
+If some element in the sum a[i - 1] + a[i] + a[i + 1] does not exist, it should be set to 0. 
+For example, b[0] should be equal to 0 + a[0] + a[1].
+Example
+For n = 5 and a = [4, 0, 1, -2, 3], the output should be mutateTheArray(n, a) = [4, 5, -1, 2, 1].
+b[0] = 0 + a[0] + a[1] = 0 + 4 + 0 = 4
+b[1] = a[0] + a[1] + a[2] = 4 + 0 + 1 = 5
+b[2] = a[1] + a[2] + a[3] = 0 + 1 + (-2) = -1
+b[3] = a[2] + a[3] + a[4] = 1 + (-2) + 3 = 2
+b[4] = a[3] + a[4] + 0 = (-2) + 3 + 0 = 1
+So, the resulting array after the mutation will be [4, 5, -1, 2, 1].
+
+CODE:::
+    static int[] copyArray(int n, int[] a) {
+        int[] b = new int[n];
+        for (int i = 0; i < n; i++) {
+            int pre = (i - 1 < 0) ? 0 : a[i - 1];
+            int next = (i + 1 < n) ? a[i + 1] : 0;
+            System.out.println("P:" + pre + " C:" + a[i] + " N:" + next);
+            b[i] = pre + a[i] + next;
+        }
+
+        return b;
+    }
+
+------------------------
+
+
+Given an array of integers arr, your task is to calculate the sum of reverse numbers of the elements of arr.
+
+Example
+For arr = [7, 234, 58100], the output should be sumOfReversed(arr) = 18939.
+The reverse of 7 is 7.
+The reverse of 234 is 432.
+The reverse of 58100 is 18500.
+So the answer is 7 + 432 + 18500 = 18939.
+For arr = [0, 100, 220], the output should be sumOfReversed(arr) = 320.
+The reverse of 0 is 0.
+The reverse of 100 is 100.
+The reverse of 220 is 220.
+So the answer is 0 + 100 + 220 = 320.
+
+CODE:::
+    // Function to find the sum of elements after reversing each element in arr[]
+    static int totalSum(int[] arr) {
+        int sum = 0; // Stores the final sum
+
+        for (int num: arr) {
+            int count = 0; // Stores count of ending 0s
+            int rev = 0;
+            boolean f = false; // Flag to avoid count of 0s that doesn't ends with 0s
+            while (num > 0) {
+                // Count of ending 0s
+                while (num > 0 && !f && num % 10 == 0) {
+                    count++;
+                    num = num / 10;
+                }
+                f = true; // Update flag with true
+                // Reversing the num
+                if (num > 0) {
+                    rev = rev * 10 + num % 10;
+                    num = num / 10;
+                }
+            }
+            // Add all ending 0s to end of rev
+            if (count > 0)
+                rev = rev * (int) Math.pow(10, count);
+
+            sum = sum + rev; // Update sum
+        }
+        return sum;
+    }
+
+
+----------
+
+
+
+Given an array of integers arr, a positive integer k, and an integer s, 
+your task is to find the number of non-empty contiguous subarrays with length not greater than k and with a sum equal to s.
+
+Example
+For arr = [1, 0], k = 2, and s = 1, the output should be subarraysCountBySum(arr, k, s) = 2.
+There is 1 subarray among the contiguous subarrays of length 1 with sum equal to s = 1, and it is [1],
+There is 1 subarray among the contiguous subarrays of length 2 with sum equal to s = 1, and it is [1, 0].
+So the answer is 2.
+
+For arr = [1, 2, 4, -1, 6, 1], k = 3, and s = 6, the output should be subarraysCountBySum(arr, k, s) = 3.
+There is 1 subarray among the contiguous subarrays of length 1 with sum equal to s = 6, and it is [6],
+There is 1 subarray among the contiguous subarrays of length 2 with sum equal to s = 6, and it is [2, 4],
+There is 1 subarray among the contiguous subarrays of length 3 with sum equal to s = 6, and it is [-1, 6, 1].
+Note that the subarray [1, 2, 4, -1] would also sum to s, but its length is greater than k, so it's not applicable.
+So the answer is 3.
+
+
+CODE ::::
+    static long subarraysCountBySum(int[] arr, int k, long s) {
+	int count = 0;
+        for (int start = 0; start < arr.length; start++) {
+            int sum=0, sublen =0;
+            for (int end = start; end < arr.length && sublen < k; end++) {
+                sum+=arr[end];
+                sublen++;
+                if (sum == s)
+                    count++;
+            }
+        }
+        return count;
+    }
+
+
+------------------
+The problem “Count all subsequences having product less than K” states that you are given an array of integers. 
+Now find the number of subsequences that have a product less than a given input K.
+a[] = {1, 2, 3, 4, 5}  & k = 8  -->  Number of subsequences less than 8: 11
+{1},{2},{3},{4},{5}, {1,2}, {1,3}, {1,4}, {1,5}, {2,3} ,  {1,2,3}
+class Main{
+  public static void main(String[] args) {
+      int a[] = {1, 2, 3, 4, 5};
+      int n = a.length , k = 8;
+      int dp[][] = new int[k][n+1];
+      for(int i=0;i<k;i++)
+        for(int j=0;j<n+1;j++)
+          dp[i][j] = 0;
+      for (int i=1;i<k;i++){
+          for (int j=1;j<=n;j++){
+              dp[i][j] = dp[i][j-1];
+              if (a[j-1] <= i && a[j-1] > 0)
+                  dp[i][j] += dp[i/a[j-1]][j-1] + 1;
+          }
+      }
+    System.out.println(dp[k-1][n]);
+  }
+}
+
+
+
+-----------------
+Given an array a that contains only numbers in the range from 1 to a.length, 
+find the first duplicate number for which the second occurrence has the minimal index. In other words, 
+if there are more than 1 duplicated numbers, return the number for which the second occurrence has a smaller index 
+than the second occurrence of the other number does. If there are no such elements, return -1.
+Example
+For a = [2, 1, 3, 5, 3, 2], the output should be firstDuplicate(a) = 3.
+There are 2 duplicates: numbers 2 and 3. The second occurrence of 3 has a smaller index than the second occurrence of 2 does, so the answer is 3.
+For a = [2, 2], the output should be firstDuplicate(a) = 2;
+For a = [2, 4, 3, 5, 1], the output should be firstDuplicate(a) = -1.
+
+
+int firstDuplicate(int[] a) {
+  for (int i = 0 ; i < a.length; i++) {
+    int  posi = Math.abs(a[i]) - 1;
+    if (a[posi] < 0) 
+        return posi + 1;
+    a[posi] = a[posi] * -1;
+  }
+  return -1;
+}
+
+
+-----------------
+***In the problem ” Plus One”  we are given an array where each element in the array represents a digit of a number. 
+The complete array represents a number. The zeroth index represents the MSB of the number.  We can assume that there is no leading zero in the number.
+Our task is to plus one the given number and then return the result in the form of an array.
+digits =[4,3,2,1]   to  [4,3,2,2]
+
+ 
+CODE::::
+  static int[] plusOne(int[] digits) {
+    int n = digits.length;
+    for(int i=n-1; i>=0; i--) {
+        if(digits[i] < 9) {
+            digits[i]++; return digits;
+        }
+        digits[i] = 0;
+    }
+    
+    int[] newNumber = new int [n+1];
+    newNumber[0] = 1;
+    return newNumber;
+}
+
+
+
+************************\
+
+
+The problem “Sum of minimum and maximum elements of all subarrays of size k” states that you are given 
+an array containing positive and negative integers, find the sum of minimum and maximum elements of all the sub-arrays of size k.
+
+arr[] = {5, 9, 8, 3, -4, 2, 1, -5}  , k = 4
+output : 17
+All the sub-arrays of size 4 are,
+{5, 9, 8, 3} : min + max = 9 + 3 = 12
+{9, 8, 3, -4} : min + max = -4 + 9 = 5
+{8, 3, -4, 2} : min + max = -4 + 8 = 4
+{3, -4, 2, 1} : min + max = -4 + 3 = -1
+{-4, 2, 1, -5} : min + max = -5 + 2 = -3
+https://www.tutorialcup.com/interview/queue/sum-of-minimum-and-maximum-elements-of-all-subarrays-of-size-k.htm#more-11481
+
+CODE::::
+     static int sumOfMinMax(int[] arr, int k) {
+        int n = arr.length;
+        int sum = 0; // initialize sum as 0
+        // Traverse all the subarray of size k one by one
+        for (int i = 0; i <= n - k; i++) {
+            int min = Integer.MAX_VALUE;
+            int max = Integer.MIN_VALUE;
+            // traverse the current subarray and find the min and max
+            for (int j = i; j < i + k; j++) {
+                min = Math.min(min, arr[j]);
+                max = Math.max(max, arr[j]);
+            }
+            sum += (min + max); // add (min + max) to the sum
+        }
+        return sum;
+    }
+    public static void main(String[] args) {
+        // Example 1
+        int arr1[] = new int[]{5, 9, 8, 3, -4, 2, 1, -5};
+        int k1 = 4;
+        System.out.println(sumOfMinMax(arr1, k1));
+        // Example 2
+        int arr2[] = new int[]{1, -1, 2, -2, 3, -3};
+        int k2 = 2;
+        System.out.println(sumOfMinMax(arr2, k2));
+    }
+
+---------------------
+
+Coin Change Problem – Given some coins of different values c1, c2, … , cs (For instance: 1,4,7….). We need an amount n. Use these given coins to form the amount n.
+You can use a coin as many times as required. Find the total number of ways in which amount n can be obtained using these coins.
+
+For instance – let amount n=3 and coins c={1,2} then the possible solutions are {1,1,1} 
+i.e. three coins of value 1 will result in amount 3 and {1,2} i.e. one coin each of value 1 and 2. Therefore, the output is 2.
+
+Input : n=5 and c={1, 2, 3}     Output : 5
+Input : n=34 and c={1, 2, 10}   Output : 42
+
+
+class Coins{ 
+    static int coin_count(int arr[],int size,  int n){ 
+ 
+        // If n is 0 then do not include any coin
+        if(n==0) 
+            return 1; 
+          
+        // If n is less than 0 no solution exists 
+        if(n<0) 
+            return 0; 
+      
+        // If coins do not exist and n  is greater than 0, no solution exist 
+        if((size<=0)&&(n>=1)) 
+            return 0; 
+    
+        return coin_count(arr,size-1,n)+coin_count(arr,size,n-arr[size-1]); 
+    }
+    static int coin_count(int arr[],  int n){
+    	int size = arr.length;
+        return coin_count(arr,size,n);
+    }
+    
+    
+    public static void main(String args[]){ 
+        int c[] = {1, 2, 10}; 
+        int n = 34; 
+        System.out.println(coin_count(c,n)); 
+    } 
+}
+
+Alternate 
+ 
+    static long coin_count(int arr[], int n){ 
+    
+    	int size = arr.length;
+        long[] count = new long[n+1]; 
+        java.util.Arrays.fill(count, 0); //Initialise all values of count as 0
+  
+        count[0] = 1; 
+  
+        // update the count[] values after the index >= the value of the picked coin 
+        for (int i=0; i<size; i++) 
+            for (int j = arr[i]; j<=n; j++) 
+                count[j] += count[j-arr[i]]; 
+  
+        return count[n]; 
+    } 
+    
+--------------------------
+
+
+The problem “Longest Repeated Subsequence” states that you are given a string as an input.
+Find out the longest repeated subsequence, that is the subsequence that exists twice in the string.
+input : aeafbdfdg     output : 3    its has (afd)
+
+
+import java.util.*;
+class Main{
+  public static void main(String[] args)
+  {
+    String s = "aeafbdfdg";  // aefdgt
+      int n = s.length();
+    int dp[][] = new int[n+1][n+1]; 
+    for (int i=0; i<=n; i++) 
+      for (int j=0; j<=n; j++) 
+        dp[i][j] = 0;
+    for (int i=0;i<n;i++){
+      for (int j=0;j<n;j++){
+        if (s.charAt(i)==s.charAt(j) && i != j) 
+          dp[i][j] = 1 + ((i>0 && j>0) ? dp[i-1][j-1] : 0);
+        else
+          dp[i][j] = Math.max(((j>0) ? dp[i][j-1] : 0), ((i>0) ? dp[i-1][j] : 0));
+         
+      }
+	System.out.println(" DP OF  " +  Arrays.deepToString(dp));
+    }
+    System.out.print(dp[n-1][n-1]);
+  }
+} 
+
+
+-------------------
+The “Queries for GCD of all numbers of an array except elements in a given range” problem states 
+that you will be given an integer array and a q number of queries. Each query contains the number left and right. 
+The problem statement asks to find out the greatest common divisor of all the integers except within the given range of the query.
+Input : arr[] = {1, 3, 6, 9}  ,  Query: {(2, 3), (0, 1), (1, 2)}
+output : 1 3 1
+The GCD of elements excluding elements from index 2 to 3 i.e., GCD of 1 and 3 is 1
+Now the GCD of elements excluding elements from index 0 to 1 i.e., GCD of 6 and 9 is 3
+Again the GCD of elements excluding elements from index 1 to 2 i.e., GCD of 1 and 9 is 1
+
+
+import java.util.*;
+class GCDNumbers{
+    static int GCD(int a, int b) {
+        if (b == 0)
+            return a;
+        return GCD(b, a % b);
+    }
+    
+    static void buildArrayOfGCD(int preArray[],int arr[], int suffixArray[], int n) {
+        preArray[0] = arr[0];
+        for (int i = 1; i < n; i++)
+            preArray[i] = GCD(preArray[i - 1], arr[i]);
+        suffixArray[n - 1] = arr[n - 1];
+        for (int i = n - 2; i >= 0; i--)
+            suffixArray[i] = GCD(suffixArray[i + 1], arr[i]);
+    }
+    
+    static int getGCDInRange(int l, int r, int preArray[], int suffixArray[], int n){
+        if (l == 0)
+            return suffixArray[r + 1];
+        if (r == n - 1)
+            return preArray[l - 1];
+        return GCD(preArray[l - 1], suffixArray[r + 1]);
+    }
+    
+    public static void main(String[] args) {
+        int arr[] = { 1, 3, 6, 9};
+        int n = arr.length;
+        int preArray[] = new int[n];
+        int suffixArray[] = new int[n];
+        buildArrayOfGCD(preArray, arr, suffixArray, n);
+        int l = 2, r = 3;
+        System.out.println(getGCDInRange(l, r, preArray, suffixArray, n));
+        l = 0; r = 1;
+        System.out.println(getGCDInRange(l, r, preArray, suffixArray, n));
+        l = 1; r = 2;
+        System.out.println(getGCDInRange(l, r, preArray, suffixArray, n));
+    }
+}
+
+----------------------------
+Given a number n, print the fibonacci numbers in reverse order.
+input n = 5   output : 3 2 1 1 0
+
+  public static void main(String[] args) {
+     
+      int n = 10;
+      int fib[] = new int[n];
+      if(n>=0) fib[0] = 0;
+      if(n>=1) fib[1] = 1;
+      for(int i=2; i<n; i++)
+        fib[i] = fib[i-1] + fib[i-2];
+        
+      for(int i=n-1;i>=0;i--)
+        System.out.print(fib[i]+" ");
+  }
+  
+ -------------------------------------------
+ In Sliding Window Maximum problem we have given an array nums, for each contiguous window of size k, 
+ find the maximum element in the window.
+ Input  nums[] = {1,3,-1,-3,5,3,6,7} k = 3  ,      Output {3,3,5,5,6,7}
+  
+ CODE::::
+   static int[] maxSlidingWindow(int[] nums, int k) {
+         int ans[] = new int[nums.length - k + 1];
+         // Traverse all the windows one by one
+         for (int i = 0; i < nums.length - k + 1; i++) {
+             // Initialise max as -infinite
+             int max = Integer.MIN_VALUE;
+             // Traverse the current window and find the maximum
+             for (int j = i; j < i + k; j++) {
+                 max = Math.max(max, nums[j]);
+             }
+             // assign the current ans as maximum
+             ans[i] = max;
+         }
+         return ans;
+    } 
+ 
+----------------------------
+Sieve of Eratosthenes is an algorithm in which we find out the prime numbers less than N. 
+Here N is an integer value. This is an efficient method to find out the prime numbers to a limit.
+
+CODE::::
+public static void main(String[] args) {
+     int n = 18;
+     boolean marked[] = new boolean[n+1];
+     for(int i=2; i*i <= n; i++) {
+   		 
+       	if(marked[i]==false){  
+           	/*marked all the multiples of i*/
+           	for(int j=i*i;j<=n;j+=i) {
+               	/*marked*/
+               	marked[j] = true; 
+           	}
+       	} 
+       	System.out.println(" " + java.util.Arrays.toString(marked));
+    }
+       
+	for (int i = 2; i <= n ; i++) {
+ 		if(marked[i]==false) 
+            System.out.print(" " + i);
+    }
+}
+----------------------
+https://www.geeksforgeeks.org/lru-cache-implementation/
+Least Recently Used (LRU) Cache is a type of method which is used to maintain the data 
+such that the time required to use the data is the minimum possible.
+LRU algorithm used when the cache is full
+
+
+    
+----------------------------
+What is merge two sorted lists problem on leetcode
+In this problem(Merge Two Sorted Lists Leetcode), we have given two linked lists.
+Both linked lists are in increasing order. Merge both linked list in such a way that 
+the new merged linked list is in increasing order.
+
+import java.util.*;
+
+/* Link list node */
+class Node {
+    int data;
+    Node next;
+    Node(int d) {
+        data = d;
+        next = null;
+    }
+}
+
+class MergeLists {
+
+    Node head;
+    /* Method to insert a node at the end of the linked list */
+    public void addToTheLast(Node node) {
+        if (head == null) {
+            head = node;
+        } else {
+            Node temp = head;
+            while (temp.next != null)
+                temp = temp.next;
+            temp.next = node;
+        }
+    }
+    
+    /* Method to print linked list */
+    void printList() {
+        Node temp = head;
+        while (temp != null) {
+            System.out.print(temp.data + " ");
+            temp = temp.next;
+        }
+        System.out.println();
+    }
+    
+    // Driver Code 
+    public static void main(String args[]) {
+        /* Let us create two sorted linked lists to test the methods 
+        Created lists: 
+          llist1: 5->10->15, 
+          llist2: 2->3->20 
+        */
+        MergeLists llist1 = new MergeLists();
+        MergeLists llist2 = new MergeLists();
+
+        // Node head1 = new Node(5); 
+        llist1.addToTheLast(new Node(5));
+        llist1.addToTheLast(new Node(10));
+        llist1.addToTheLast(new Node(15));
+
+        // Node head2 = new Node(2); 
+        llist2.addToTheLast(new Node(2));
+        llist2.addToTheLast(new Node(3));
+        llist2.addToTheLast(new Node(20));
+
+
+        llist1.head = sortedMerge(llist1.head, llist2.head);
+        llist1.printList();
+
+    }
+
+    static Node sortedMerge(Node headA, Node headB) {
+
+        // a dummy first node to hang the result on 
+        Node dummyNode = new Node(0);
+
+        /* tail points to the last result node */
+        Node tail = dummyNode;
+        while (true) {
+
+            /* if either list runs out, use the other list */
+            if (headA == null) {
+                tail.next = headB;
+                break;
+            }
+            if (headB == null) {
+                tail.next = headA;
+                break;
+            }
+
+            /* Compare the data of the two 
+            lists whichever lists' data is 
+            smaller, append it into tail and 
+            advance the head to the next Node 
+            */
+            if (headA.data <= headB.data) {
+                tail.next = headA;
+                headA = headA.next;
+            } else {
+                tail.next = headB;
+                headB = headB.next;
+            }
+
+            /* Advance the tail */
+            tail = tail.next;
+        }
+        return dummyNode.next;
+    }
+}
+
+
+---------------------------
+Sudoku is a number-placement puzzle. The objective is to fill a 9 × 9 grid with numbers in such a way
+that each column, each row, and each of the nine 3 × 3 sub-grids that compose the grid 
+all contain all of the numbers from 1 to 9 one time.
+
+Implement an algorithm that will check whether the given grid of numbers represents 
+a valid Sudoku puzzle according to the layout rules described above. 
+Note that the puzzle represented by grid does not have to be solvable.
+
+
+// Java Program to check whether given sudoku board is valid or not
+
+import java.io.*;
+import java.util.*;
+ 
+class GFG{
+ 
+// Checks whether there is any duplicate in current row or not
+public static boolean notInRow(char arr[][], int row) {
+     
+    // Set to store characters seen so far.
+    HashSet<Character> st = new HashSet<>();
+     for(int i = 0; i < 9; i++) {
+         
+        // If already encountered before, return false
+        if (st.contains(arr[row][i]))
+            return false;
+ 
+        // If it is not an empty cell, insert valueat the current cell in the set
+        if (arr[row][i] != '.')
+            st.add(arr[row][i]);
+    }
+    return true;
+}
+ 
+// Checks whether there is any duplicate in current column or not.
+public static boolean notInCol(char arr[][], int col) {
+    HashSet<Character> st = new HashSet<>();
+ 
+    for(int i = 0; i < 9; i++) {
+         
+        // If already encountered before, return false
+        if (st.contains(arr[i][col]))
+            return false;
+ 
+        // If it is not an empty cell,
+        // insert value at the current cell in the set
+        if (arr[i][col] != '.')
+            st.add(arr[i][col]);
+    }
+    return true;
+}
+ 
+// Checks whether there is any duplicate in current 3x3 box or not.
+public static boolean notInBox(char arr[][],
+                int startRow, int startCol) {
+                
+    HashSet<Character> st = new HashSet<>();
+ 
+    for(int row = 0; row < 3; row++){
+        for(int col = 0; col < 3; col++) {
+            char curr = arr[row + startRow][col + startCol];
+ 
+            // If already encountered before, return false
+            if (st.contains(curr))
+                return false;
+ 
+            // If it is not an empty cell, insert value at current cell in set
+            if (curr != '.')
+                st.add(curr);
+        }
+    }
+    return true;
+}
+ 
+// Checks whether current row and current column and current 3x3 box is valid or not
+public static boolean isValid(char arr[][], int row, int col) {
+    return notInRow(arr, row) && notInCol(arr, col) &&
+           notInBox(arr, row - row % 3, col - col % 3);
+}
+ 
+public static boolean isValidConfig(char arr[][], int n) {
+    for(int i = 0; i < n; i++)  {
+        for(int j = 0; j < n; j++) {
+            // If current row or current column or current 3x3 box is not valid, return false
+            if (!isValid(arr, i, j))
+                return false;
+        }
+    }
+    return true;
+}
+ 
+// Driver code
+public static void main(String[] args)
+{
+    char[][] board = new char[][] {
+        { '5', '3', '.', '.', '7', '.', '.', '.', '.' },
+        { '6', '.', '.', '1', '9', '5', '.', '.', '.' },
+        { '.', '9', '8', '.', '.', '.', '.', '6', '.' },
+        { '8', '.', '.', '.', '6', '.', '.', '.', '3' },
+        { '4', '.', '.', '8', '.', '3', '.', '.', '1' },
+        { '7', '.', '.', '.', '2', '.', '.', '.', '6' },
+        { '.', '6', '.', '.', '.', '.', '2', '8', '.' },
+        { '.', '.', '.', '4', '1', '9', '.', '.', '5' },
+        { '.', '.', '.', '.', '8', '.', '.', '7', '9' }
+    };
+ 
+    System.out.println((isValidConfig(board, 9) ?
+                       "YES" : "NO"));
+}
+}
+
+
+
+-------------------------
+
+A cryptarithm is a mathematical puzzle for which the goal is to find the correspondence between letters and digits, such that the given arithmetic equation consisting of letters holds true when the letters are converted to digits.
+
+You have an array of strings crypt, the cryptarithm, and an an array containing the mapping of letters and digits, solution. The array crypt will contain three non-empty strings that follow the structure: [word1, word2, word3], which should be interpreted as the word1 + word2 = word3 cryptarithm.
+
+If crypt, when it is decoded by replacing all of the letters in the cryptarithm with digits using the mapping in solution, becomes a valid arithmetic equation containing no numbers with leading zeroes, the answer is true. If it does not become a valid arithmetic solution, the answer is false.
+
+Note that number 0 doesn't contain leading zeroes (while for example 00 or 0123 do).
+
+For crypt = ["SEND", "MORE", "MONEY"] and
+
+solution = [['O', '0'],
+            ['M', '1'],
+            ['Y', '2'],
+            ['E', '5'],
+            ['N', '6'],
+            ['D', '7'],
+            ['R', '8'],
+            ['S', '9']]
+the output should be
+isCryptSolution(crypt, solution) = true.
+
+When you decrypt "SEND", "MORE", and "MONEY" using the mapping given in crypt, you get 9567 + 1085 = 10652 which is correct and a valid arithmetic equation.
+
+
+
+boolean isCryptSolution(String[] crypt, char[][] solution) {
+    for(char[] arr : solution){
+        for(int i = 0; i < crypt.length; i++){
+            crypt[i]=crypt[i].replace(arr[0],arr[1]);
+        }
+        System.out.println(Arrays.toString(crypt));
+    }
+    
+    for(int i = 0; i < crypt.length; i++){
+        if(!crypt[i].equals("0")&&crypt[i].startsWith("0"))
+            return false;
+    }
+    
+    return Long.parseLong(crypt[0])+Long.parseLong(crypt[1])==Long.parseLong(crypt[2]);
+}
+
+
+------------------
+
+    public int countQuadruplets(int[] nums) {
+        
+       	Map<Integer, List<Integer>> map = new HashMap<>();
+		int res = 0;
+		for (int i = 0; i < nums.length - 2; i ++) {
+			for (int j = i + 1; j < nums.length - 1; j ++) {
+				for (int k = j + 1; k < nums.length; k ++) {
+					int s = nums[i] + nums[j] + nums[k];
+					map.putIfAbsent(s, new ArrayList<>());
+					map.get(s).add(k);
+				}
+			}
+		}
+		for (int i = 0; i < nums.length; i ++) {
+			if (map.containsKey(nums[i])) {
+				for (int v: map.get(nums[i])) {
+					if (i > v) {
+						res ++;
+					}
+				}
+			}
+		}
+		return res;
+	}
+
+
+
+
